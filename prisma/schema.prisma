@@ -1,0 +1,220 @@
+// Instant Invoice — per-user data, Google auth (Auth.js)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Currency {
+  PKR
+  USD
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+}
+
+enum MilestoneStatus {
+  PENDING
+  PAID
+}
+
+// ---------- Auth.js models ----------
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+
+  accounts Account[]
+  sessions Session[]
+
+  customers Customer[]
+  banks     BankAccount[]
+  projects  Project[]
+  invoices  Invoice[]
+  profile   BusinessProfile?
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ---------- App models (all owned by a user) ----------
+
+model Customer {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  email     String?
+  phone     String?
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invoices Invoice[]
+  projects Project[]
+
+  @@index([userId])
+  @@index([name])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  customerId  String
+  currency    Currency @default(PKR)
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  customer   Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  milestones Milestone[]
+  invoices   Invoice[]
+
+  @@index([userId])
+  @@index([customerId])
+}
+
+model Milestone {
+  id          String        @id @default(cuid())
+  projectId   String
+  name        String
+  description String?
+  amount      Decimal       @default(0) @db.Decimal(12, 2)
+  status    MilestoneStatus @default(PENDING)
+  dueDate   DateTime?
+  sortOrder Int             @default(0)
+  invoiceId String?
+  createdAt DateTime        @default(now())
+
+  project Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  invoice Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+
+  @@index([projectId])
+}
+
+model BankAccount {
+  id            String   @id @default(cuid())
+  userId        String
+  bankName      String
+  accountTitle  String
+  accountNumber String
+  iban          String?
+  branch        String?
+  swift         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invoices Invoice[]
+
+  @@index([userId])
+}
+
+model Invoice {
+  id            String        @id @default(cuid())
+  userId        String
+  invoiceNumber String
+  customerId    String
+  bankAccountId String?
+  projectId     String?
+  currency      Currency      @default(PKR)
+  status        InvoiceStatus @default(DRAFT)
+  issueDate     DateTime      @default(now())
+  dueDate       DateTime?
+  notes         String?
+
+  subtotal  Decimal @default(0) @db.Decimal(12, 2)
+  taxRate   Decimal @default(0) @db.Decimal(5, 2)
+  taxAmount Decimal @default(0) @db.Decimal(12, 2)
+  discount  Decimal @default(0) @db.Decimal(12, 2)
+  total     Decimal @default(0) @db.Decimal(12, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  customer    Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  bankAccount BankAccount?  @relation(fields: [bankAccountId], references: [id])
+  project     Project?      @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  items       InvoiceItem[]
+  milestones  Milestone[]
+
+  @@unique([userId, invoiceNumber])
+  @@index([userId])
+  @@index([customerId])
+  @@index([status])
+}
+
+model InvoiceItem {
+  id          String  @id @default(cuid())
+  invoiceId   String
+  description String
+  project     String?
+  quantity    Decimal @default(1) @db.Decimal(12, 2)
+  unitPrice   Decimal @default(0) @db.Decimal(12, 2)
+  total       Decimal @default(0) @db.Decimal(12, 2)
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+}
+
+// Sender profile (the "FROM" on every invoice) — one per user.
+model BusinessProfile {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  name       String
+  title      String?
+  phone      String?
+  email      String?
+  footerNote String?
+  updatedAt  DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

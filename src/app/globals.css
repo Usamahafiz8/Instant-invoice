@@ -1,0 +1,217 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+}
+
+html {
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+body {
+  background-color: #f6f7fb;
+  color: #0f172a;
+}
+.dark body {
+  background-color: #08070f;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ── Modern polish ─────────────────────────────────────────────────── */
+
+/* Smooth content entrance */
+@keyframes ii-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-in {
+  animation: ii-fade-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Softer, layered shadows */
+.shadow-sm {
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 0.04),
+    0 1px 3px rgb(15 23 42 / 0.05);
+}
+.shadow-md {
+  box-shadow:
+    0 4px 12px rgb(15 23 42 / 0.06),
+    0 2px 4px rgb(15 23 42 / 0.05);
+}
+
+/* Roomier card corners for a more modern feel */
+.rounded-xl {
+  border-radius: 1rem;
+}
+
+/* Cards/inputs animate smoothly */
+.bg-white,
+input,
+select,
+textarea,
+button,
+a {
+  transition-property: color, background-color, border-color, box-shadow, transform,
+    opacity;
+  transition-duration: 150ms;
+  transition-timing-function: ease;
+}
+
+/* Indigo focus everywhere (modernizes older slate-focus inputs) */
+.focus\:border-slate-900:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgb(99 102 241 / 0.12);
+}
+
+/* Gentle lift on clickable cards */
+a.bg-white:hover {
+  transform: translateY(-2px);
+}
+
+/* ===========================================================================
+   Glass theming layer.
+   The app's pages use slate/white Tailwind utilities. We remap those here so
+   every surface becomes a frosted-glass card that adapts to light & dark —
+   without editing each page. Unlayered rules outrank Tailwind's utilities.
+   =========================================================================== */
+
+/* Surfaces (cards/panels use bg-white) → frosted glass */
+.bg-white {
+  background-color: rgb(255 255 255 / 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.dark .bg-white {
+  background-color: rgb(255 255 255 / 0.05);
+}
+
+/* Borders */
+.dark .border-slate-200 {
+  border-color: rgb(255 255 255 / 0.08);
+}
+.dark .border-slate-100 {
+  border-color: rgb(255 255 255 / 0.06);
+}
+.dark .border-slate-300 {
+  border-color: rgb(255 255 255 / 0.12);
+}
+
+/* Soft background fills */
+.dark .bg-slate-50 {
+  background-color: rgb(255 255 255 / 0.03);
+}
+.dark .bg-slate-100 {
+  background-color: rgb(255 255 255 / 0.07);
+}
+.dark .hover\:bg-slate-50:hover,
+.dark .hover\:bg-slate-100:hover {
+  background-color: rgb(255 255 255 / 0.07);
+}
+
+/* Dividers */
+.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgb(255 255 255 / 0.06);
+}
+
+/* Text ramp (slate → white alpha) */
+.dark .text-slate-900 { color: rgb(255 255 255 / 0.92); }
+.dark .text-slate-800 { color: rgb(255 255 255 / 0.88); }
+.dark .text-slate-700 { color: rgb(255 255 255 / 0.80); }
+.dark .text-slate-600 { color: rgb(255 255 255 / 0.62); }
+.dark .text-slate-500 { color: rgb(255 255 255 / 0.48); }
+.dark .text-slate-400 { color: rgb(255 255 255 / 0.38); }
+
+/* Primary buttons (bg-slate-900) → unified indigo→violet gradient in both themes,
+   so every primary action matches the sidebar's "New Invoice" button. */
+.bg-slate-900 {
+  background-image: linear-gradient(135deg, #6366f1, #7c3aed);
+  border-color: transparent;
+}
+.bg-slate-900:hover {
+  opacity: 0.92;
+}
+
+/* Inputs */
+input,
+select,
+textarea {
+  background-color: transparent;
+}
+.dark input,
+.dark select,
+.dark textarea {
+  color: rgb(255 255 255 / 0.9);
+}
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: rgb(255 255 255 / 0.3);
+}
+.dark select option {
+  background-color: #14131f;
+  color: rgb(255 255 255 / 0.9);
+}
+
+/* Status badges read well in dark */
+.dark .bg-green-100 { background-color: rgb(34 197 94 / 0.15); }
+.dark .text-green-700,
+.dark .text-green-600 { color: #86efac; }
+.dark .bg-blue-100 { background-color: rgb(59 130 246 / 0.15); }
+.dark .text-blue-700 { color: #93c5fd; }
+.dark .bg-red-100 { background-color: rgb(239 68 68 / 0.15); }
+.dark .text-red-700,
+.dark .text-red-600 { color: #fca5a5; }
+.dark .border-red-200 { border-color: rgb(239 68 68 / 0.25); }
+.dark .bg-red-50 { background-color: rgb(239 68 68 / 0.10); }
+.dark .bg-amber-50 { background-color: rgb(245 158 11 / 0.10); }
+.dark .text-amber-800,
+.dark .text-amber-600 { color: #fcd34d; }
+.dark .border-amber-200 { border-color: rgb(245 158 11 / 0.25); }
+.dark .bg-indigo-50 { background-color: rgb(99 102 241 / 0.14); }
+.dark .text-indigo-700,
+.dark .text-indigo-600 { color: #a5b4fc; }
+.dark .bg-slate-200 { background-color: rgb(255 255 255 / 0.1); }
+
+/* Softer shadows in dark */
+.dark .shadow-sm { box-shadow: 0 1px 2px rgb(0 0 0 / 0.4); }
+.dark .shadow-md { box-shadow: 0 4px 16px rgb(0 0 0 / 0.5); }
+
+/* Nice scrollbars */
+.dark ::-webkit-scrollbar { width: 10px; height: 10px; }
+.dark ::-webkit-scrollbar-thumb {
+  background: rgb(255 255 255 / 0.12);
+  border-radius: 9999px;
+}
+
+/* Reusable glass utility for hand-crafted chrome */
+.glass {
+  background-color: rgb(255 255 255 / 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.dark .glass {
+  background-color: rgb(13 12 23 / 0.7);
+}
+
+/* Print: force solid white, drop glass/chrome */
+@media print {
+  header,
+  aside,
+  .no-print,
+  .bg-blob {
+    display: none !important;
+  }
+  .bg-white {
+    background: #fff !important;
+    backdrop-filter: none !important;
+  }
+}
