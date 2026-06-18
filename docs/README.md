@@ -15,6 +15,7 @@ API surface, and every user flow.
 | [data-model.md](./data-model.md) | Prisma schema, every model, relations, enums |
 | [api.md](./api.md) | All REST endpoints, methods, payloads, responses |
 | [flows.md](./flows.md) | Step-by-step user flows (onboarding, invoicing, projects…) |
+| [billing.md](./billing.md) | Subscriptions & trial via Lemon Squeezy — setup + flow |
 
 ## Product at a glance
 

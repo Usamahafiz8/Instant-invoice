@@ -12,6 +12,7 @@ import {
   FolderKanban,
   Landmark,
   Settings,
+  CreditCard,
   Plus,
   Menu,
   X,
@@ -34,15 +35,18 @@ const NAV = [
   { href: "/dashboard/customers", label: "Customers", icon: Users },
   { href: "/dashboard/projects", label: "Projects", icon: FolderKanban },
   { href: "/dashboard/banks", label: "Banks", icon: Landmark },
+  { href: "/dashboard/billing", label: "Billing", icon: CreditCard },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
 export default function DashboardShell({
   user,
   children,
+  trialDaysLeft = 0,
 }: {
   user?: SessionUser;
   children: React.ReactNode;
+  trialDaysLeft?: number;
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false); // mobile drawer
@@ -125,6 +129,15 @@ export default function DashboardShell({
             Instant Invoice
           </span>
         </header>
+
+        {trialDaysLeft > 0 && (
+          <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-xs font-medium text-amber-800 dark:border-amber-500/25 dark:bg-amber-500/10 dark:text-amber-200">
+            {trialDaysLeft} day{trialDaysLeft === 1 ? "" : "s"} left in your free trial.{" "}
+            <Link href="/dashboard/billing" className="font-semibold underline">
+              Subscribe
+            </Link>
+          </div>
+        )}
 
         <main
           key={pathname}

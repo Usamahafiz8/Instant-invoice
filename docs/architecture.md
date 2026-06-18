@@ -126,6 +126,13 @@ Scripts: `dev`, `build`, `start`, `lint`.
 | `AUTH_TRUST_HOST` | yes (local) | Trust the host header (set `true` for localhost) |
 | `AUTH_GOOGLE_ID` | optional | Google OAuth client ID — enables the Google button |
 | `AUTH_GOOGLE_SECRET` | optional | Google OAuth client secret |
+| `LEMONSQUEEZY_API_KEY` | for billing | Lemon Squeezy API key |
+| `LEMONSQUEEZY_STORE_ID` | for billing | Lemon Squeezy store id |
+| `LEMONSQUEEZY_WEBHOOK_SECRET` | for billing | Webhook signing secret |
+| `LEMONSQUEEZY_VARIANT_MONTHLY` / `_YEARLY` | for billing | Plan variant ids |
+| `NEXT_PUBLIC_PRICE_MONTHLY` / `_YEARLY` | optional | Cosmetic price labels on the billing page |
+
+Subscriptions are documented in [billing.md](./billing.md).
 
 Google sign-in is **off** until `AUTH_GOOGLE_ID` holds a real value (not a `YOUR_…`
 placeholder). Register `http://localhost:3000/api/auth/callback/google` as an
