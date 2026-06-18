@@ -36,6 +36,45 @@ body {
   animation: ii-fade-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* Landing-page animations */
+@keyframes ii-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-rise {
+  animation: ii-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes ii-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-16px);
+  }
+}
+.animate-float {
+  animation: ii-float 7s ease-in-out infinite;
+}
+@keyframes ii-float-slow {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-22px) rotate(1deg);
+  }
+}
+.animate-float-slow {
+  animation: ii-float-slow 11s ease-in-out infinite;
+}
+
 /* Softer, layered shadows */
 .shadow-sm {
   box-shadow:

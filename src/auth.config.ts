@@ -8,10 +8,15 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const loggedIn = !!auth?.user;
-      const isPublic =
-        nextUrl.pathname.startsWith("/signin") ||
-        nextUrl.pathname.startsWith("/signup");
-      if (isPublic) {
+      const path = nextUrl.pathname;
+
+      // Landing page is always public — the page itself shows the marketing
+      // page to guests and the dashboard to signed-in users.
+      if (path === "/") return true;
+
+      const isAuthPage =
+        path.startsWith("/signin") || path.startsWith("/signup");
+      if (isAuthPage) {
         // Already signed in? bounce to the dashboard.
         if (loggedIn) return Response.redirect(new URL("/", nextUrl));
         return true;

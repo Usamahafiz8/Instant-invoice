@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import {
   FileText,
   CheckCircle2,
@@ -13,6 +12,7 @@ import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/auth-helpers";
 import { auth } from "@/auth";
 import { formatMoney, type Currency } from "@/lib/format";
+import Landing from "@/components/Landing";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +25,7 @@ const statusStyle: Record<string, string> = {
 
 export default async function DashboardHome() {
   const userId = await getUserId();
-  if (!userId) redirect("/signin");
+  if (!userId) return <Landing />;
   const session = await auth();
 
   const [customerCount, projectCount, invoices] = await Promise.all([

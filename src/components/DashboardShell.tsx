@@ -59,8 +59,9 @@ export default function DashboardShell({
     });
   }
 
-  // Auth pages render standalone (no dashboard chrome).
-  if (pathname === "/signin" || pathname === "/signup") return <>{children}</>;
+  // Auth pages and any logged-out view (landing) render standalone — no chrome.
+  if (!user || pathname === "/signin" || pathname === "/signup")
+    return <>{children}</>;
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
