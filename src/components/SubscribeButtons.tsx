@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowRight } from "lucide-react";
 
 type Plan = "monthly" | "yearly";
 
@@ -34,49 +34,86 @@ export default function SubscribeButtons({ disabled }: { disabled?: boolean }) {
     }
   }
 
+  const plans = [
+    {
+      id: "monthly" as Plan,
+      name: "Monthly",
+      price: priceMonthly,
+      period: "/mo",
+      note: "Flexible — cancel anytime",
+      featured: false,
+    },
+    {
+      id: "yearly" as Plan,
+      name: "Yearly",
+      price: priceYearly,
+      period: "/yr",
+      note: "Best value — save vs monthly",
+      featured: true,
+    },
+  ];
+
   return (
     <div>
-      <div className="grid gap-3 sm:grid-cols-2">
-        {/* Monthly */}
-        <button
-          onClick={() => subscribe("monthly")}
-          disabled={disabled || loading !== null}
-          className="flex flex-col items-start gap-1 rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-indigo-400 disabled:opacity-60 dark:border-white/10"
-        >
-          <span className="text-sm font-semibold">Monthly</span>
-          {priceMonthly && (
-            <span className="text-2xl font-bold tracking-tight">
-              {priceMonthly}
-              <span className="text-sm font-medium text-slate-400">/mo</span>
-            </span>
-          )}
-          <span className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600">
-            {loading === "monthly" && <Loader2 className="h-4 w-4 animate-spin" />}
-            Subscribe monthly
-          </span>
-        </button>
+      <div className="grid gap-4 sm:grid-cols-2">
+        {plans.map((p, i) => (
+          <div
+            key={p.id}
+            style={{ animationDelay: `${i * 90}ms` }}
+            className={`animate-rise group relative overflow-hidden rounded-2xl p-5 transition duration-300 hover:-translate-y-1 ${
+              p.featured
+                ? "border-2 border-indigo-400/70 bg-white shadow-lg shadow-indigo-500/10 dark:border-indigo-500/50"
+                : "border border-slate-200 bg-white hover:border-indigo-300 dark:border-white/10"
+            }`}
+          >
+            {p.featured && (
+              <>
+                <div className="pointer-events-none absolute -right-8 -top-10 h-28 w-28 rounded-full bg-indigo-400/15 blur-2xl transition-opacity duration-300 group-hover:opacity-150 dark:bg-indigo-500/20" />
+                <span className="absolute right-3 top-3 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white shadow-sm">
+                  Best value
+                </span>
+              </>
+            )}
 
-        {/* Yearly */}
-        <button
-          onClick={() => subscribe("yearly")}
-          disabled={disabled || loading !== null}
-          className="relative flex flex-col items-start gap-1 rounded-2xl border border-indigo-300 bg-white p-5 text-left transition hover:border-indigo-500 disabled:opacity-60 dark:border-indigo-500/40"
-        >
-          <span className="absolute right-3 top-3 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
-            Best value
-          </span>
-          <span className="text-sm font-semibold">Yearly</span>
-          {priceYearly && (
-            <span className="text-2xl font-bold tracking-tight">
-              {priceYearly}
-              <span className="text-sm font-medium text-slate-400">/yr</span>
-            </span>
-          )}
-          <span className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600">
-            {loading === "yearly" && <Loader2 className="h-4 w-4 animate-spin" />}
-            Subscribe yearly
-          </span>
-        </button>
+            <p className="relative text-sm font-semibold">{p.name}</p>
+
+            <p className="relative mt-2 flex items-end gap-1">
+              {p.price ? (
+                <>
+                  <span className="text-3xl font-bold tracking-tight">{p.price}</span>
+                  <span className="pb-1 text-sm font-medium text-slate-400">
+                    {p.period}
+                  </span>
+                </>
+              ) : (
+                <span className="text-sm text-slate-400">Price shown at checkout</span>
+              )}
+            </p>
+
+            <p className="relative mt-1 text-xs text-slate-500 dark:text-white/50">
+              {p.note}
+            </p>
+
+            <button
+              onClick={() => subscribe(p.id)}
+              disabled={disabled || loading !== null}
+              className={`relative mt-4 flex w-full items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold transition disabled:opacity-60 ${
+                p.featured
+                  ? "bg-gradient-to-br from-indigo-500 to-violet-600 text-white shadow-sm hover:shadow-md"
+                  : "border border-slate-300 text-slate-700 hover:bg-slate-50 dark:border-white/15 dark:text-white/80"
+              }`}
+            >
+              {loading === p.id ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <>
+                  Subscribe {p.name.toLowerCase()}
+                  <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+                </>
+              )}
+            </button>
+          </div>
+        ))}
       </div>
 
       {disabled && (

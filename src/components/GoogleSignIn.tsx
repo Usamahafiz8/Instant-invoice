@@ -1,11 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 
-// Renders a "Continue with Google" button — but only when the Google provider
-// is actually configured (AUTH_GOOGLE_ID / AUTH_GOOGLE_SECRET set in .env).
 export default function GoogleSignIn({
   callbackUrl = "/dashboard",
   label = "Continue with Google",
@@ -16,6 +14,17 @@ export default function GoogleSignIn({
   dividerText?: string;
 }) {
   const [loading, setLoading] = useState(false);
+  const [googleEnabled, setGoogleEnabled] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    fetch("/api/auth/providers")
+      .then((r) => r.json())
+      .then((p) => setGoogleEnabled("google" in p))
+      .catch(() => setGoogleEnabled(false));
+  }, []);
+
+  // Don't render anything while loading providers or if Google isn't configured.
+  if (!googleEnabled) return null;
 
   return (
     <div>

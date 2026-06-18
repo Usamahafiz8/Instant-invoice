@@ -34,7 +34,7 @@ if (
   process.env.AUTH_GOOGLE_ID &&
   !process.env.AUTH_GOOGLE_ID.startsWith("YOUR_")
 ) {
-  providers.push(Google);
+  providers.push(Google({ allowDangerousEmailAccountLinking: true }));
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({

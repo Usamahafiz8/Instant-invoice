@@ -8,15 +8,33 @@ import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleSignIn from "@/components/GoogleSignIn";
 
+const AUTH_ERRORS: Record<string, string> = {
+  OAuthAccountNotLinked:
+    "This email is registered with a password. Sign in with your password below.",
+  CredentialsSignin: "Wrong email or password.",
+  OAuthCallbackError: "Google sign-in failed. Please try again.",
+  OAuthSignin: "Could not start Google sign-in. Please try again.",
+  SessionRequired: "Please sign in to continue.",
+  Verification: "The sign-in link has expired. Please try again.",
+};
+
 function SignInForm() {
   const router = useRouter();
   const params = useSearchParams();
-  const callbackUrl = params.get("callbackUrl") ?? "/dashboard";
+
+  const raw = params.get("callbackUrl") ?? "";
+  const callbackUrl =
+    raw.startsWith("/") && !raw.startsWith("//") ? raw : "/dashboard";
+
+  const errorCode = params.get("error") ?? "";
+  const initialError = errorCode
+    ? (AUTH_ERRORS[errorCode] ?? "Something went wrong. Please try again.")
+    : "";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(initialError);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -93,11 +111,7 @@ function SignInForm() {
           </div>
         </div>
 
-        {error && (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
-            {error}
-          </p>
-        )}
+        {error && <p className={errorClass}>{error}</p>}
 
         <button
           type="submit"
@@ -130,6 +144,8 @@ const iconClass =
   "pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400";
 const inputClass =
   "w-full bg-transparent py-2.5 pl-10 pr-3.5 text-sm placeholder:text-slate-400 focus:outline-none dark:placeholder:text-white/30";
+const errorClass =
+  "rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-950/40 dark:text-red-400";
 
 export default function SignInPage() {
   return (

@@ -1,15 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { User, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleSignIn from "@/components/GoogleSignIn";
 
-export default function SignUpPage() {
+function SignUpForm() {
   const router = useRouter();
+  const params = useSearchParams();
+  const raw = params.get("callbackUrl") ?? "";
+  const callbackUrl =
+    raw.startsWith("/") && !raw.startsWith("//") ? raw : "/dashboard";
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,24 +26,35 @@ export default function SignUpPage() {
     e.preventDefault();
     setError("");
     setLoading(true);
+
     const res = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
     });
+
     if (!res.ok) {
       setLoading(false);
-      setError((await res.json().catch(() => ({})))?.error ?? "Could not sign up");
+      const data = await res.json().catch(() => ({}));
+      setError(data?.error ?? "Could not create your account. Please try again.");
       return;
     }
+
     // Auto-login after registering.
-    const login = await signIn("credentials", { email, password, redirect: false });
+    const login = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
     setLoading(false);
+
     if (login?.error) {
-      router.push("/signin");
+      // Registration succeeded but auto-login failed — send them to sign in.
+      setError("Account created! Please sign in to continue.");
       return;
     }
-    router.push("/dashboard");
+
+    router.push(callbackUrl);
     router.refresh();
   }
 
@@ -51,7 +67,7 @@ export default function SignUpPage() {
 
       <div className="mt-8">
         <GoogleSignIn
-          callbackUrl="/dashboard"
+          callbackUrl={callbackUrl}
           label="Sign up with Google"
           dividerText="or sign up with email"
         />
@@ -116,11 +132,7 @@ export default function SignUpPage() {
           </div>
         </div>
 
-        {error && (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
-            {error}
-          </p>
-        )}
+        {error && <p className={errorClass}>{error}</p>}
 
         <button
           type="submit"
@@ -153,3 +165,13 @@ const iconClass =
   "pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400";
 const inputClass =
   "w-full bg-transparent py-2.5 pl-10 pr-3.5 text-sm placeholder:text-slate-400 focus:outline-none dark:placeholder:text-white/30";
+const errorClass =
+  "rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-950/40 dark:text-red-400";
+
+export default function SignUpPage() {
+  return (
+    <Suspense>
+      <SignUpForm />
+    </Suspense>
+  );
+}

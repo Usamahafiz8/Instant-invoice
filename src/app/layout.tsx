@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
-import ThemeProvider from "@/components/ThemeProvider";
+import ThemeProvider, { THEME_SCRIPT } from "@/components/ThemeProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -26,6 +26,12 @@ export default function RootLayout({
       className={`${geistSans.variable} h-full antialiased`}
     >
       <body className="min-h-full" suppressHydrationWarning>
+        {/* Anti-flash theme script — server-rendered so it never re-renders on
+            the client (avoids React's "script tag" warning). */}
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }}
+        />
         <ThemeProvider>
           <NextTopLoader
             color="#6366f1"

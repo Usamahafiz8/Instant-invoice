@@ -10,19 +10,26 @@ export async function POST(req: Request) {
   const password = String(body?.password ?? "");
 
   if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-    return NextResponse.json({ error: "Enter a valid email" }, { status: 400 });
+    return NextResponse.json({ error: "Enter a valid email." }, { status: 400 });
   }
   if (password.length < 6) {
     return NextResponse.json(
-      { error: "Password must be at least 6 characters" },
+      { error: "Password must be at least 6 characters." },
       { status: 400 },
     );
   }
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
+    // No password means they registered via Google — give a specific hint.
+    if (!existing.password) {
+      return NextResponse.json(
+        { error: "This email is linked to a Google account. Sign in with Google instead.", code: "GOOGLE_ONLY" },
+        { status: 409 },
+      );
+    }
     return NextResponse.json(
-      { error: "An account with this email already exists" },
+      { error: "An account with this email already exists. Sign in instead." },
       { status: 409 },
     );
   }
