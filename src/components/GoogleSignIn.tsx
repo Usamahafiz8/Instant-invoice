@@ -7,7 +7,7 @@ import { Loader2 } from "lucide-react";
 export default function GoogleSignIn({
   callbackUrl = "/dashboard",
   label = "Continue with Google",
-  dividerText = "or continue with email",
+  dividerText,
 }: {
   callbackUrl?: string;
   label?: string;
@@ -23,7 +23,6 @@ export default function GoogleSignIn({
       .catch(() => setGoogleEnabled(false));
   }, []);
 
-  // Don't render anything while loading providers or if Google isn't configured.
   if (!googleEnabled) return null;
 
   return (
@@ -45,11 +44,13 @@ export default function GoogleSignIn({
         {label}
       </button>
 
-      <div className="my-5 flex items-center gap-3">
-        <span className="h-px flex-1 bg-slate-200 dark:bg-white/10" />
-        <span className="text-xs font-medium text-slate-400">{dividerText}</span>
-        <span className="h-px flex-1 bg-slate-200 dark:bg-white/10" />
-      </div>
+      {dividerText && (
+        <div className="my-5 flex items-center gap-3">
+          <span className="h-px flex-1 bg-slate-200 dark:bg-white/10" />
+          <span className="text-xs font-medium text-slate-400">{dividerText}</span>
+          <span className="h-px flex-1 bg-slate-200 dark:bg-white/10" />
+        </div>
+      )}
     </div>
   );
 }

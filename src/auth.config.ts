@@ -1,4 +1,5 @@
 import type { NextAuthConfig } from "next-auth";
+import { isAdmin } from "@/lib/admin";
 
 // Edge-safe config (no Prisma, no bcrypt) — shared by the proxy and full server auth.
 // Real providers (Credentials, optional Google) are added in auth.ts.
@@ -13,10 +14,8 @@ export const authConfig = {
       // Landing page is always public — the marketing home for everyone.
       if (path === "/") return true;
 
-      const isAuthPage =
-        path.startsWith("/signin") || path.startsWith("/signup");
+      const isAuthPage = path.startsWith("/signin") || path.startsWith("/signup");
       if (isAuthPage) {
-        // Already signed in? bounce to the dashboard.
         if (loggedIn) return Response.redirect(new URL("/dashboard", nextUrl));
         return true;
       }
@@ -26,6 +25,7 @@ export const authConfig = {
     session({ session, token }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;
+        session.user.isAdmin = isAdmin(token.email);
       }
       return session;
     },

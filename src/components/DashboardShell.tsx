@@ -21,12 +21,14 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
+  ShieldCheck,
 } from "lucide-react";
 
 type SessionUser = {
   name?: string | null;
   email?: string | null;
   image?: string | null;
+  isAdmin?: boolean;
 };
 
 const NAV = [
@@ -48,6 +50,7 @@ export default function DashboardShell({
   children: React.ReactNode;
   trialDaysLeft?: number;
 }) {
+  const isAdmin = user?.isAdmin === true;
   const pathname = usePathname();
   const [open, setOpen] = useState(false); // mobile drawer
   const [collapsed, setCollapsed] = useState(false); // desktop collapse
@@ -92,6 +95,7 @@ export default function DashboardShell({
           collapsed={collapsed}
           isActive={isActive}
           user={user}
+          isAdmin={isAdmin}
           onToggleCollapse={toggleCollapse}
         />
       </aside>
@@ -106,6 +110,7 @@ export default function DashboardShell({
           collapsed={false}
           isActive={isActive}
           user={user}
+          isAdmin={isAdmin}
           onClose={() => setOpen(false)}
           showClose
         />
@@ -154,6 +159,7 @@ function SidebarInner({
   collapsed,
   isActive,
   user,
+  isAdmin,
   onToggleCollapse,
   onClose,
   showClose,
@@ -161,6 +167,7 @@ function SidebarInner({
   collapsed: boolean;
   isActive: (href: string) => boolean;
   user?: SessionUser;
+  isAdmin?: boolean;
   onToggleCollapse?: () => void;
   onClose?: () => void;
   showClose?: boolean;
@@ -240,6 +247,33 @@ function SidebarInner({
             </Link>
           );
         })}
+
+        {isAdmin && (
+          <>
+            <div className="mx-1 my-1.5 h-px bg-black/[0.06] dark:bg-white/[0.08]" />
+            <Link
+              href="/dashboard/admin"
+              onClick={onClose}
+              title={collapsed ? "Admin" : undefined}
+              className={`group flex items-center gap-2.5 rounded-lg text-[13px] font-medium transition-all ${
+                collapsed ? "justify-center px-0 py-2.5" : "px-2.5 py-2"
+              } ${
+                isActive("/dashboard/admin")
+                  ? "bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300"
+                  : "text-gray-500 hover:bg-gray-100/70 hover:text-gray-900 dark:text-white/40 dark:hover:bg-white/[0.05] dark:hover:text-white/80"
+              }`}
+            >
+              <ShieldCheck
+                className={`h-[15px] w-[15px] shrink-0 ${
+                  isActive("/dashboard/admin")
+                    ? "text-amber-600 dark:text-amber-400"
+                    : ""
+                }`}
+              />
+              {!collapsed && "Admin"}
+            </Link>
+          </>
+        )}
 
         <Link
           href="/dashboard/invoices/new"
