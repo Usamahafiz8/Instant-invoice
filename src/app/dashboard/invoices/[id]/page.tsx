@@ -115,12 +115,12 @@ export default async function InvoicePage({
   return (
     <div className="mx-auto max-w-2xl">
       <div className="no-print mb-4 flex items-center justify-between gap-2">
-        <Link href="/invoices" className="text-sm text-slate-500 hover:underline">
+        <Link href="/dashboard/invoices" className="text-sm text-slate-500 hover:underline">
           ← All invoices
         </Link>
         <div className="flex items-center gap-2">
           <Link
-            href={`/invoices/${invoice.id}/edit`}
+            href={`/dashboard/invoices/${invoice.id}/edit`}
             className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium hover:bg-slate-50"
           >
             Edit
@@ -129,7 +129,7 @@ export default async function InvoicePage({
         </div>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
+      <div className="rounded-xl border border-slate-200 bg-white p-8">
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-2xl font-bold">{invoice.invoiceNumber}</h1>
@@ -139,10 +139,10 @@ export default async function InvoicePage({
             </p>
             {invoice.project && (
               <Link
-                href={`/projects/${invoice.project.id}`}
+                href={`/dashboard/projects/${invoice.project.id}`}
                 className="mt-2 inline-block rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700 hover:underline"
               >
-                📁 {invoice.project.name}
+                {invoice.project.name}
               </Link>
             )}
           </div>
@@ -211,7 +211,7 @@ export default async function InvoicePage({
                   Project milestones
                 </p>
                 <Link
-                  href={`/projects/${invoice.project.id}`}
+                  href={`/dashboard/projects/${invoice.project.id}`}
                   className="text-sm font-semibold text-slate-800 hover:underline"
                 >
                   {invoice.project.name}

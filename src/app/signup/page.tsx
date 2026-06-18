@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { User, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleSignIn from "@/components/GoogleSignIn";
 
@@ -12,6 +13,7 @@ export default function SignUpPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -36,85 +38,118 @@ export default function SignUpPage() {
       router.push("/signin");
       return;
     }
-    router.push("/");
+    router.push("/dashboard");
     router.refresh();
   }
-
-  const input =
-    "w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 focus:outline-none";
 
   return (
     <AuthLayout>
       <h1 className="text-2xl font-bold tracking-tight">Create your account</h1>
-      <p className="mt-1 text-sm text-slate-500">
+      <p className="mt-1 text-sm text-slate-500 dark:text-white/50">
         Free — your data stays private to you.
       </p>
 
       <div className="mt-8">
-        <GoogleSignIn callbackUrl="/" />
+        <GoogleSignIn
+          callbackUrl="/dashboard"
+          label="Sign up with Google"
+          dividerText="or sign up with email"
+        />
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="mb-1.5 block text-xs font-medium text-slate-600">
-            Name
-          </label>
-          <input
-            className={input}
-            placeholder="Your name"
-            autoComplete="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+          <label className={labelClass}>Name</label>
+          <div className={fieldClass}>
+            <User className={iconClass} />
+            <input
+              className={inputClass}
+              placeholder="Your name"
+              autoComplete="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
         </div>
+
         <div>
-          <label className="mb-1.5 block text-xs font-medium text-slate-600">
-            Email
-          </label>
-          <input
-            className={input}
-            type="email"
-            placeholder="you@example.com"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <label className={labelClass}>Email</label>
+          <div className={fieldClass}>
+            <Mail className={iconClass} />
+            <input
+              className={inputClass}
+              type="email"
+              placeholder="you@example.com"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
         </div>
+
         <div>
-          <label className="mb-1.5 block text-xs font-medium text-slate-600">
-            Password
-          </label>
-          <input
-            className={input}
-            type="password"
-            placeholder="At least 6 characters"
-            autoComplete="new-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <label className={labelClass}>Password</label>
+          <div className={fieldClass}>
+            <Lock className={iconClass} />
+            <input
+              className={`${inputClass} pr-10`}
+              type={showPw ? "text" : "password"}
+              placeholder="At least 6 characters"
+              autoComplete="new-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPw((s) => !s)}
+              aria-label={showPw ? "Hide password" : "Show password"}
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-slate-400 transition hover:text-slate-600 dark:hover:text-white/70"
+            >
+              {showPw ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </button>
+          </div>
         </div>
+
         {error && (
           <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
             {error}
           </p>
         )}
+
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md disabled:translate-y-0 disabled:opacity-50"
         >
+          {loading && <Loader2 className="h-4 w-4 animate-spin" />}
           {loading ? "Creating…" : "Create account"}
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-slate-500">
+      <p className="mt-6 text-center text-sm text-slate-500 dark:text-white/50">
         Already have an account?{" "}
-        <Link href="/signin" className="font-medium text-indigo-600 hover:underline">
+        <Link
+          href="/signin"
+          className="font-medium text-indigo-600 hover:underline"
+        >
           Sign in
         </Link>
       </p>
     </AuthLayout>
   );
 }
+
+const labelClass =
+  "mb-1.5 block text-xs font-medium text-slate-600 dark:text-white/60";
+const fieldClass =
+  "relative flex items-center rounded-lg border border-slate-300 bg-white/60 transition focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/20 dark:bg-white/[0.03]";
+const iconClass =
+  "pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400";
+const inputClass =
+  "w-full bg-transparent py-2.5 pl-10 pr-3.5 text-sm placeholder:text-slate-400 focus:outline-none dark:placeholder:text-white/30";

@@ -103,7 +103,7 @@ export default function BanksPage() {
 
       <form
         onSubmit={handleSubmit}
-        className="mt-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+        className="mt-6 rounded-xl border border-slate-200 bg-white p-5"
       >
         <h2 className="text-sm font-semibold text-slate-700">
           {editingId ? "Edit bank account" : "Add a bank account"}
@@ -178,7 +178,7 @@ export default function BanksPage() {
           banks.map((b) => (
             <div
               key={b.id}
-              className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+              className="rounded-xl border border-slate-200 bg-white p-4"
             >
               <div className="flex items-start justify-between">
                 <div>

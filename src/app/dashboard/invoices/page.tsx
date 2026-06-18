@@ -28,18 +28,18 @@ export default async function InvoicesPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Invoices</h1>
         <Link
-          href="/invoices/new"
+          href="/dashboard/invoices/new"
           className="rounded-lg bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700"
         >
           + New Invoice
         </Link>
       </div>
 
-      <div className="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white">
         {invoices.length === 0 ? (
           <p className="p-6 text-sm text-slate-500">
             No invoices yet.{" "}
-            <Link href="/invoices/new" className="text-slate-900 underline">
+            <Link href="/dashboard/invoices/new" className="text-slate-900 underline">
               Create your first one →
             </Link>
           </p>
@@ -58,7 +58,7 @@ export default async function InvoicesPage() {
                 <tr key={inv.id} className="hover:bg-slate-50">
                   <td className="px-4 py-3">
                     <Link
-                      href={`/invoices/${inv.id}`}
+                      href={`/dashboard/invoices/${inv.id}`}
                       className="font-medium text-slate-900 hover:underline"
                     >
                       {inv.invoiceNumber}

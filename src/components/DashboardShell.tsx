@@ -29,12 +29,12 @@ type SessionUser = {
 };
 
 const NAV = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/invoices", label: "Invoices", icon: FileText },
-  { href: "/customers", label: "Customers", icon: Users },
-  { href: "/projects", label: "Projects", icon: FolderKanban },
-  { href: "/banks", label: "Banks", icon: Landmark },
-  { href: "/settings", label: "Settings", icon: Settings },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard/invoices", label: "Invoices", icon: FileText },
+  { href: "/dashboard/customers", label: "Customers", icon: Users },
+  { href: "/dashboard/projects", label: "Projects", icon: FolderKanban },
+  { href: "/dashboard/banks", label: "Banks", icon: Landmark },
+  { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
 export default function DashboardShell({
@@ -59,12 +59,8 @@ export default function DashboardShell({
     });
   }
 
-  // Auth pages and any logged-out view (landing) render standalone — no chrome.
-  if (!user || pathname === "/signin" || pathname === "/signup")
-    return <>{children}</>;
-
   const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+    href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(href);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -168,7 +164,7 @@ function SidebarInner({
         }`}
       >
         <Link
-          href="/"
+          href="/dashboard"
           onClick={onClose}
           className="flex items-center gap-2"
           title="Instant Invoice"
@@ -233,7 +229,7 @@ function SidebarInner({
         })}
 
         <Link
-          href="/invoices/new"
+          href="/dashboard/invoices/new"
           onClick={onClose}
           title={collapsed ? "New Invoice" : undefined}
           className={`mt-2 flex items-center justify-center gap-1.5 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 font-semibold text-white shadow-sm transition hover:opacity-90 ${

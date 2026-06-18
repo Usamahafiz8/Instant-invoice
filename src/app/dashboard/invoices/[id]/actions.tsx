@@ -41,7 +41,7 @@ export default function InvoiceActions({
   async function remove() {
     if (!confirm("Delete this invoice?")) return;
     await fetch(`/api/invoices/${id}`, { method: "DELETE" });
-    router.push("/invoices");
+    router.push("/dashboard/invoices");
     router.refresh();
   }
 

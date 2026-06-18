@@ -125,7 +125,7 @@ export default function ProjectDetailPage() {
     setBusy(false);
     if (res.ok) {
       const data = await res.json();
-      router.push(`/invoices/${data.id}`);
+      router.push(`/dashboard/invoices/${data.id}`);
     } else {
       setError((await res.json().catch(() => ({})))?.error ?? "Failed to invoice");
     }
@@ -136,7 +136,7 @@ export default function ProjectDetailPage() {
     return (
       <p className="text-sm text-slate-500">
         Project not found.{" "}
-        <Link href="/projects" className="underline">
+        <Link href="/dashboard/projects" className="underline">
           Back to projects
         </Link>
       </p>
@@ -157,14 +157,14 @@ export default function ProjectDetailPage() {
   const input =
     "w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 text-sm text-slate-900 transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 focus:outline-none dark:focus:ring-indigo-500/20";
   const primaryBtn =
-    "inline-flex items-center justify-center gap-1.5 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 disabled:opacity-50";
+    "inline-flex items-center justify-center gap-1.5 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50";
   const ghostBtn =
     "inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-slate-50 disabled:opacity-50";
 
   return (
     <div>
       <Link
-        href="/projects"
+        href="/dashboard/projects"
         className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 transition hover:text-slate-900"
       >
         <ArrowLeft className="h-4 w-4" /> All projects
@@ -180,16 +180,16 @@ export default function ProjectDetailPage() {
         )}
       </div>
 
-      {/* summary cards */}
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {/* summary */}
+      <div className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 sm:grid-cols-4 dark:border-white/10 dark:bg-white/10">
         <Stat label="Total" value={formatMoney(total, cur)} />
         <Stat label="Invoiced" value={formatMoney(invoiced, cur)} />
-        <Stat label="Paid" value={formatMoney(paid, cur)} tone="green" />
-        <Stat label="Remaining" value={formatMoney(total - paid, cur)} tone="amber" />
+        <Stat label="Paid" value={formatMoney(paid, cur)} />
+        <Stat label="Remaining" value={formatMoney(total - paid, cur)} />
       </div>
 
       {/* milestones */}
-      <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white">
         <div className="border-b border-slate-100 px-5 py-4">
           <h2 className="text-sm font-semibold text-slate-800">Milestones</h2>
           <p className="mt-0.5 text-xs text-slate-400">
@@ -231,7 +231,7 @@ export default function ProjectDetailPage() {
                       </span>
                       {m.invoice && (
                         <Link
-                          href={`/invoices/${m.invoice.id}`}
+                          href={`/dashboard/invoices/${m.invoice.id}`}
                           className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700 hover:underline"
                         >
                           {m.invoice.invoiceNumber}
@@ -249,7 +249,7 @@ export default function ProjectDetailPage() {
 
                 <div className="flex shrink-0 items-center gap-1.5">
                   {m.invoice && (
-                    <Link href={`/invoices/${m.invoice.id}`} className={ghostBtn}>
+                    <Link href={`/dashboard/invoices/${m.invoice.id}`} className={ghostBtn}>
                       <FileText className="h-3.5 w-3.5" /> Invoice
                     </Link>
                   )}
@@ -327,12 +327,12 @@ export default function ProjectDetailPage() {
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
 
       {/* invoices for this project */}
-      <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white">
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
           <h2 className="text-sm font-semibold text-slate-800">
             Invoices for this project
           </h2>
-          <Link href={`/invoices/new?project=${project.id}`} className={ghostBtn}>
+          <Link href={`/dashboard/invoices/new?project=${project.id}`} className={ghostBtn}>
             <Plus className="h-3.5 w-3.5" /> Manual invoice
           </Link>
         </div>
@@ -348,7 +348,7 @@ export default function ProjectDetailPage() {
                 className="flex items-center justify-between px-5 py-3 text-sm"
               >
                 <Link
-                  href={`/invoices/${inv.id}`}
+                  href={`/dashboard/invoices/${inv.id}`}
                   className="font-medium text-slate-900 hover:underline"
                 >
                   {inv.invoiceNumber}
@@ -374,27 +374,13 @@ export default function ProjectDetailPage() {
   );
 }
 
-function Stat({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: string;
-  tone?: "green" | "amber";
-}) {
-  const color =
-    tone === "green"
-      ? "text-green-600"
-      : tone === "amber"
-        ? "text-amber-600"
-        : "text-slate-900";
+function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="bg-white p-4">
       <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
         {label}
       </p>
-      <p className={`mt-1 text-lg font-bold ${color}`}>{value}</p>
+      <p className="mt-1 text-lg font-bold">{value}</p>
     </div>
   );
 }

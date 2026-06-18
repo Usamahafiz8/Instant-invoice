@@ -1,42 +1,44 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { Loader2 } from "lucide-react";
 
 // Renders a "Continue with Google" button — but only when the Google provider
 // is actually configured (AUTH_GOOGLE_ID / AUTH_GOOGLE_SECRET set in .env).
 export default function GoogleSignIn({
-  callbackUrl = "/",
+  callbackUrl = "/dashboard",
+  label = "Continue with Google",
+  dividerText = "or continue with email",
 }: {
   callbackUrl?: string;
+  label?: string;
+  dividerText?: string;
 }) {
-  const [enabled, setEnabled] = useState(false);
-
-  useEffect(() => {
-    fetch("/api/auth/providers")
-      .then((r) => (r.ok ? r.json() : {}))
-      .then((p: Record<string, unknown>) => setEnabled(Boolean(p?.google)))
-      .catch(() => setEnabled(false));
-  }, []);
-
-  if (!enabled) return null;
+  const [loading, setLoading] = useState(false);
 
   return (
     <div>
       <button
         type="button"
-        onClick={() => signIn("google", { callbackUrl })}
-        className="flex w-full items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:bg-transparent dark:hover:bg-white/[0.04]"
+        disabled={loading}
+        onClick={() => {
+          setLoading(true);
+          signIn("google", { callbackUrl });
+        }}
+        className="flex w-full items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md disabled:translate-y-0 disabled:opacity-60 dark:bg-white/[0.03] dark:hover:bg-white/[0.06]"
       >
-        <GoogleIcon />
-        Continue with Google
+        {loading ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <GoogleIcon />
+        )}
+        {label}
       </button>
 
       <div className="my-5 flex items-center gap-3">
         <span className="h-px flex-1 bg-slate-200 dark:bg-white/10" />
-        <span className="text-xs font-medium text-slate-400">
-          or continue with email
-        </span>
+        <span className="text-xs font-medium text-slate-400">{dividerText}</span>
         <span className="h-px flex-1 bg-slate-200 dark:bg-white/10" />
       </div>
     </div>

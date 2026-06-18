@@ -40,9 +40,19 @@ npx prisma db push
 npm run dev
 ```
 
-Open http://localhost:3000, create an account, and start invoicing.
+Open http://localhost:3000, create an account, and start invoicing. New accounts
+get a built-in **Getting Started** walkthrough on the dashboard.
 
 > Optional: set `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` in `.env` to also enable Google sign-in.
+
+## Documentation
+
+Full platform docs live in [`docs/`](./docs/README.md):
+
+- [Architecture](./docs/architecture.md) — stack, structure, routing, auth, theming, setup
+- [Data model](./docs/data-model.md) — Prisma schema, models, relations
+- [API reference](./docs/api.md) — every endpoint, payloads, responses
+- [User flows](./docs/flows.md) — onboarding, invoicing, projects & milestones
 
 ## Scripts
 

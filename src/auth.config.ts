@@ -10,15 +10,14 @@ export const authConfig = {
       const loggedIn = !!auth?.user;
       const path = nextUrl.pathname;
 
-      // Landing page is always public — the page itself shows the marketing
-      // page to guests and the dashboard to signed-in users.
+      // Landing page is always public — the marketing home for everyone.
       if (path === "/") return true;
 
       const isAuthPage =
         path.startsWith("/signin") || path.startsWith("/signup");
       if (isAuthPage) {
         // Already signed in? bounce to the dashboard.
-        if (loggedIn) return Response.redirect(new URL("/", nextUrl));
+        if (loggedIn) return Response.redirect(new URL("/dashboard", nextUrl));
         return true;
       }
       // Everything else requires a session.

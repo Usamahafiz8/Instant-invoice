@@ -99,7 +99,7 @@ export default function CustomersPage() {
 
       <form
         onSubmit={handleSubmit}
-        className="mt-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+        className="mt-6 rounded-xl border border-slate-200 bg-white p-5"
       >
         <h2 className="text-sm font-semibold text-slate-700">
           {editingId ? "Edit customer" : "Add a customer"}
@@ -152,7 +152,7 @@ export default function CustomersPage() {
         </div>
       </form>
 
-      <div className="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white">
         {loading ? (
           <p className="p-6 text-sm text-slate-500">Loading…</p>
         ) : customers.length === 0 ? (
@@ -182,7 +182,7 @@ export default function CustomersPage() {
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-2">
                       <Link
-                        href={`/invoices/new?customer=${c.id}`}
+                        href={`/dashboard/invoices/new?customer=${c.id}`}
                         className="rounded-md border border-slate-300 px-2.5 py-1 text-xs font-medium hover:bg-slate-100"
                       >
                         Invoice

@@ -333,7 +333,7 @@ export default function InvoiceForm({
       return;
     }
     const invoice = await res.json();
-    router.push(`/invoices/${invoice.id}`);
+    router.push(`/dashboard/invoices/${invoice.id}`);
     router.refresh();
   }
 
@@ -343,7 +343,7 @@ export default function InvoiceForm({
       <div className="flex items-center justify-between gap-3">
         <div>
           <Link
-            href={isEdit ? `/invoices/${initial!.id}` : "/invoices"}
+            href={isEdit ? `/dashboard/invoices/${initial!.id}` : "/dashboard/invoices"}
             className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 transition hover:text-slate-900"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -358,7 +358,7 @@ export default function InvoiceForm({
       {!profile && (
         <p className="mt-4 flex flex-wrap items-center gap-1 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-sm text-amber-800">
           <span>Add your name in</span>
-          <Link href="/settings" className="font-semibold underline">
+          <Link href="/dashboard/settings" className="font-semibold underline">
             Settings
           </Link>
           <span>so it shows as the “FROM” on the invoice.</span>
@@ -369,7 +369,7 @@ export default function InvoiceForm({
         {/* Left: form sections */}
         <div className="space-y-5 lg:col-span-2">
           {/* Step 1 */}
-          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-white p-5">
             <SectionTitle n={1} icon={Users}>
               Customer &amp; currency
             </SectionTitle>
@@ -406,7 +406,7 @@ export default function InvoiceForm({
                 {customers.length === 0 ? (
                   <p className="py-2 text-sm text-slate-500">
                     No customers yet.{" "}
-                    <Link href="/customers" className="font-medium text-indigo-600 underline">
+                    <Link href="/dashboard/customers" className="font-medium text-indigo-600 underline">
                       Add one →
                     </Link>
                   </p>
@@ -435,7 +435,7 @@ export default function InvoiceForm({
                       onClick={() => setCurrency(c)}
                       className={`rounded-md px-5 py-1.5 text-sm font-semibold transition ${
                         currency === c
-                          ? "bg-slate-900 text-white shadow-sm"
+                          ? "bg-slate-900 text-white"
                           : "text-slate-500 hover:text-slate-900"
                       }`}
                     >
@@ -456,7 +456,7 @@ export default function InvoiceForm({
               {banks.length === 0 ? (
                 <p className="py-2 text-sm text-slate-500">
                   No bank accounts yet.{" "}
-                  <Link href="/banks" className="font-medium text-indigo-600 underline">
+                  <Link href="/dashboard/banks" className="font-medium text-indigo-600 underline">
                     Add one →
                   </Link>
                 </p>
@@ -478,7 +478,7 @@ export default function InvoiceForm({
           </section>
 
           {/* Step 2 */}
-          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-white p-5">
             <SectionTitle n={2} icon={ListChecks}>
               Line items
             </SectionTitle>
@@ -559,7 +559,7 @@ export default function InvoiceForm({
           </section>
 
           {/* Step 3 */}
-          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-white p-5">
             <SectionTitle n={3} icon={SlidersHorizontal}>
               Tax, discount &amp; notes
             </SectionTitle>
@@ -611,7 +611,7 @@ export default function InvoiceForm({
 
         {/* Right: sticky summary */}
         <div className="lg:col-span-1">
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-6">
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 lg:sticky lg:top-6">
             <h2 className="text-sm font-semibold text-slate-800">Summary</h2>
             <dl className="mt-4 space-y-2.5 text-sm">
               <Row label="Subtotal" value={formatMoney(totals.subtotal, currency)} />
@@ -649,7 +649,7 @@ export default function InvoiceForm({
             <button
               type="submit"
               disabled={saving}
-              className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 disabled:opacity-50"
+              className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
             >
               <Save className="h-4 w-4" />
               {saving ? "Saving…" : isEdit ? "Save changes" : "Create invoice"}

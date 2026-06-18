@@ -103,7 +103,7 @@ export default function ProjectsPage() {
 
       <form
         onSubmit={handleSubmit}
-        className="mt-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+        className="mt-6 rounded-xl border border-slate-200 bg-white p-5"
       >
         <h2 className="text-sm font-semibold text-slate-700">New project</h2>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -116,7 +116,7 @@ export default function ProjectsPage() {
           {customers.length === 0 ? (
             <p className="text-sm text-slate-500">
               No customers yet.{" "}
-              <Link href="/customers" className="text-slate-900 underline">
+              <Link href="/dashboard/customers" className="text-slate-900 underline">
                 Add one →
               </Link>
             </p>
@@ -226,8 +226,8 @@ export default function ProjectsPage() {
             return (
               <Link
                 key={p.id}
-                href={`/projects/${p.id}`}
-                className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md"
+                href={`/dashboard/projects/${p.id}`}
+                className="rounded-xl border border-slate-200 bg-white p-5 transition"
               >
                 <div className="flex items-start justify-between">
                   <div>

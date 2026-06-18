@@ -8,6 +8,7 @@ import {
   Globe,
   ArrowRight,
   Check,
+  Sparkles,
 } from "lucide-react";
 
 const FEATURES = [
@@ -86,10 +87,13 @@ export default function Landing() {
       {/* hero */}
       <section className="mx-auto max-w-5xl px-4 pb-16 pt-16 text-center sm:pt-24">
         <div
-          className="animate-rise mx-auto inline-flex items-center gap-2 rounded-full border border-black/[0.06] bg-white/70 px-3 py-1 text-xs font-medium text-slate-600 backdrop-blur dark:border-white/[0.08] dark:text-white/60"
+          className="animate-rise mx-auto inline-flex items-center gap-2 rounded-full border border-black/[0.06] bg-white/70 px-3 py-1 text-xs font-medium text-slate-600 shadow-sm backdrop-blur dark:border-white/[0.1] dark:bg-white/[0.06] dark:text-white/70"
           style={{ animationDelay: "0ms" }}
         >
-          <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="animate-ping-soft absolute inline-flex h-full w-full rounded-full bg-emerald-500" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          </span>
           Free • email or Google sign-in
         </div>
 
@@ -98,7 +102,7 @@ export default function Landing() {
           style={{ animationDelay: "80ms" }}
         >
           Invoices, done in{" "}
-          <span className="bg-gradient-to-r from-indigo-500 via-violet-500 to-indigo-500 bg-clip-text text-transparent">
+          <span className="animate-gradient bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 bg-clip-text text-transparent">
             seconds
           </span>
           .
@@ -118,9 +122,10 @@ export default function Landing() {
         >
           <Link
             href="/signup"
-            className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
+            className="group inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
           >
-            Get started free <ArrowRight className="h-4 w-4" />
+            Get started free{" "}
+            <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
           </Link>
           <Link
             href="/signin"
@@ -182,15 +187,16 @@ export default function Landing() {
         </p>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map((f) => {
+          {FEATURES.map((f, i) => {
             const Icon = f.icon;
             return (
               <div
                 key={f.title}
-                className="rounded-2xl border border-black/[0.06] bg-white/70 p-5 shadow-sm backdrop-blur-xl transition hover:shadow-md dark:border-white/[0.07] dark:bg-white/[0.04]"
+                className="animate-rise group rounded-2xl border border-black/[0.06] bg-white/70 p-5 shadow-sm backdrop-blur-xl transition duration-200 hover:-translate-y-1 hover:shadow-md dark:border-white/[0.07] dark:bg-white/[0.04]"
+                style={{ animationDelay: `${i * 80}ms` }}
               >
                 <span
-                  className={`flex h-11 w-11 items-center justify-center rounded-xl ${f.tint}`}
+                  className={`flex h-11 w-11 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-110 ${f.tint}`}
                 >
                   <Icon className="h-5 w-5" />
                 </span>
@@ -206,30 +212,54 @@ export default function Landing() {
 
       {/* CTA */}
       <section className="mx-auto max-w-5xl px-4 py-12">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-700 px-6 py-12 text-center shadow-xl sm:py-16">
-          <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
-          <div className="pointer-events-none absolute -bottom-12 -left-10 h-44 w-44 rounded-full bg-violet-300/20 blur-3xl" />
-          <h2 className="relative text-2xl font-bold tracking-tight text-white sm:text-3xl">
+        <div className="animate-rise relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-700 px-6 py-14 text-center shadow-2xl ring-1 ring-white/10 sm:py-20 dark:from-indigo-700 dark:via-indigo-900 dark:to-violet-950 dark:ring-white/[0.08]">
+          {/* animated glow blobs */}
+          <div className="animate-float pointer-events-none absolute -right-10 -top-12 h-48 w-48 rounded-full bg-white/10 blur-3xl dark:bg-indigo-400/15" />
+          <div className="animate-float-slow pointer-events-none absolute -bottom-16 -left-12 h-56 w-56 rounded-full bg-fuchsia-400/25 blur-3xl dark:bg-fuchsia-500/15" />
+          {/* subtle grid texture */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[0.06]"
+            style={{
+              backgroundImage:
+                "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
+              backgroundSize: "34px 34px",
+              maskImage:
+                "radial-gradient(ellipse at center, #000 30%, transparent 75%)",
+            }}
+          />
+
+          {/* eyebrow */}
+          <span className="relative inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white backdrop-blur">
+            <Sparkles className="h-3.5 w-3.5" /> Set up in under a minute
+          </span>
+
+          <h2 className="relative mx-auto mt-5 max-w-xl text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Ready to send your first invoice?
           </h2>
-          <p className="relative mx-auto mt-2 max-w-md text-indigo-100">
+          <p className="relative mx-auto mt-3 max-w-md text-base text-indigo-100">
             Create an account in seconds — no credit card, no setup.
           </p>
-          <div className="relative mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+
+          <div className="relative mt-8 flex justify-center">
             <Link
               href="/signup"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-indigo-700 shadow-sm transition hover:bg-indigo-50"
+              className="group inline-flex items-center gap-2 rounded-xl bg-white px-7 py-3.5 text-sm font-semibold text-indigo-700 shadow-lg shadow-indigo-950/30 transition duration-200 hover:-translate-y-0.5 hover:shadow-xl"
             >
-              Get started free <ArrowRight className="h-4 w-4" />
+              Get started free
+              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
             </Link>
-            <span className="flex items-center gap-4 text-sm text-indigo-100">
-              <span className="flex items-center gap-1.5">
-                <Check className="h-4 w-4" /> Free
+          </div>
+
+          {/* trust row */}
+          <div className="relative mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-indigo-100">
+            {["No credit card", "Free forever", "PDF export"].map((t) => (
+              <span key={t} className="flex items-center gap-1.5">
+                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-white/20">
+                  <Check className="h-3 w-3" />
+                </span>
+                {t}
               </span>
-              <span className="flex items-center gap-1.5">
-                <Check className="h-4 w-4" /> PDF export
-              </span>
-            </span>
+            ))}
           </div>
         </div>
       </section>

@@ -75,6 +75,49 @@ body {
   animation: ii-float-slow 11s ease-in-out infinite;
 }
 
+/* Animated gradient sweep (for headline accent text) */
+@keyframes ii-gradient {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+.animate-gradient {
+  background-size: 200% auto;
+  animation: ii-gradient 5s ease-in-out infinite;
+}
+
+/* Soft expanding "live" ring (for the status dot) */
+@keyframes ii-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  75%,
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+.animate-ping-soft {
+  animation: ii-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise,
+  .animate-in,
+  .animate-float,
+  .animate-float-slow,
+  .animate-gradient,
+  .animate-ping-soft {
+    animation: none !important;
+  }
+}
+
 /* Softer, layered shadows */
 .shadow-sm {
   box-shadow:

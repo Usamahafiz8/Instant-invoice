@@ -71,7 +71,7 @@ export default function SettingsPage() {
       ) : (
         <form
           onSubmit={handleSubmit}
-          className="mt-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+          className="mt-6 rounded-xl border border-slate-200 bg-white p-5"
         >
           <div className="grid gap-3">
             <div>
